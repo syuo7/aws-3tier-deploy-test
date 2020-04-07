@@ -19,3 +19,10 @@ variable "availability_zone" {
   type = "list"
   default = ["ap-northeast-2a", "ap-northeast-2c"]
 }
+variable "key_pair_path" {
+  type = "map"
+  default = {
+    public_key_path = "keypairs/id_rsa.pub",
+    private_key_path = "keypairs/id_rsa",
+  }
+}
