@@ -41,4 +41,24 @@ __vpc-subnet.tf__
   * "aws_subnet" "threetier_was_subnet" - Subnets with 10.10.10.0/24 and 10.10.11.0/24 CIDR are created for each az. (Currently, not deployed as instances, just created as a subnet)
   * "aws_subnet" "threetier_db_subnet" - Subnets with 10.10.12.0/24 and 10.10.13.0/24 CIDR are created for each az. (Currently, not deployed as instances, just created as a subnet)
 
+__outputs.tf__
+* if completed terraform deploy by ``terraform apply``, ELB DNS address will be output.
+
+# Description for another file.
+* ``script.sh`` - Provisioning for the Nginx plus install on two web instances.
+* ``request.py`` - Script by python to requests and responses(save as text) to automate the dualization test of the Nginx server.
+
+# Provision Way
+1. git clone for tihs repository
+2. terraform credential setting on ``variables.tf``
+   * aws_access_key
+   * aws_secret_key
+3. If you are not the same remote terraform cloud, change your remote setting.
+4. ``terraform plan``
+5. ``terraform apply``
+6. connect to the ELB dns address on the browser when completed deploy and refresh your browser. (Client Ip and Server Ip will be changed when refreshing (f5) a browser )
+   * If you want dualization test for automatically, please use a request.py
+7. ``terraform destroy`` - all of the deployed resources from terraform will be deleted on AWS.
+
+Thanks.
 
