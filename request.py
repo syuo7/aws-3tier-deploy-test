@@ -9,11 +9,12 @@ for s in range(0, 50): # set the number of request range
     except:
         print("Elb address is wrong")
     soup = bs(data, 'html.parser')
+    f.write("Request %d: \n" % (s+1))
     for span in soup.findAll('p', class_="smaller")[5]:
         f.write(span.string)
     f.write(", ")
     for span in soup.findAll('p')[1]:
         f.write(span.string)
-    f.write("\n")
+    f.write("\n\n")
 f.close()
 
