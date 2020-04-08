@@ -27,6 +27,7 @@ resource "aws_elb" "elb" {
   
   subnets = "${aws_subnet.threetier_dmz_subnet.*.id}"
   security_groups = ["${aws_security_group.elb.id}",
+                     "${aws_security_group.threetier_default.id}"
                     ]
   instances = "${aws_instance.web.*.id}"
 
