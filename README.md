@@ -44,11 +44,11 @@ __vpc-subnet.tf__
 __outputs.tf__
 * if completed terraform deploy by ``terraform apply``, ELB DNS address will be output.
 
-# Description for another file.
+# Description for another files.
 * ``script.sh`` - Provisioning for the Nginx plus install on two web instances.
 * ``request.py`` - Script by python to requests and responses(save as text) to automate the dualization test of the Nginx server.
 
-# Provision Way
+# Provisioning Way
 1. git clone for tihs repository
 2. terraform credential setting on ``variables.tf``
    * aws_access_key
