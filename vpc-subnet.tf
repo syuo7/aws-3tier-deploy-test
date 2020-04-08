@@ -1,15 +1,4 @@
 # Create the public subnets
-resource "aws_subnet" "threetier_web_subnet" {
-  count = "${length(var.availability_zone)}"
-  availability_zone = "${element(var.availability_zone, count.index)}"
-  vpc_id =  "${aws_vpc.threetier.id}"
-  cidr_block = "${cidrsubnet(var.vpc_cidr,8,count.index)}"
-# map_public_ip_on_launch = true
-  tags = {
-    Name = "Web Subnet - ${element(var.availability_zone, count.index)}"
-  }
-}
-
 resource "aws_subnet" "threetier_dmz_subnet" {
   count = "${length(var.availability_zone)}"
   availability_zone = "${element(var.availability_zone, count.index)}"
@@ -21,6 +10,16 @@ resource "aws_subnet" "threetier_dmz_subnet" {
 }
 
 # Create the private subnet
+resource "aws_subnet" "threetier_web_subnet" {
+  count = "${length(var.availability_zone)}"
+  availability_zone = "${element(var.availability_zone, count.index)}"
+  vpc_id =  "${aws_vpc.threetier.id}"
+  cidr_block = "${cidrsubnet(var.vpc_cidr,8,count.index)}"
+  tags = {
+    Name = "WEB Subnet - ${element(var.availability_zone, count.index)}"
+  }
+}
+
 resource "aws_subnet" "threetier_was_subnet" {
   count = "${length(var.availability_zone)}"
   availability_zone = "${element(var.availability_zone, count.index)}"
