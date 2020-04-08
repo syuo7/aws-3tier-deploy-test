@@ -16,6 +16,8 @@ __main.tf__
 __variables.tf__
 * Some variables ( Like AWS credential, CIDR,  etc) used by other tf resources.
 
+__vpc.tf__
+* ``"aws_vpc"`` resource is defined. ( VPC CIDR is ["10.10.0.0/16" )
 __vpc-gateway.tf__
 * ``aws_internet_gateway`` and ``aws_nat_gateway" resources are defined.
   * ``aws_internet_gateway`` - Internet gateway for the public dmz subnet.
@@ -26,5 +28,17 @@ __vpc-route.tf__
   * ``aws_route_table`` - Created the route table to each subnet (dmz,web,was,db) and each route table can be accessible to all of the external internets. ( CIDR is 0.0.0.0/0 )
 ``aws_route_table_association`` - Association for the routing table to each subnet.
 
+__vpc-sg.tf__
+* three ``aws_security_group`` resources are defined.
+  * ``"aws_security_group" "elb"`` - allowed for the 80/http port to ELB node.
+  * ``"aws_security_group" "threetier_default"`` - allowed for the 80/http port from the just DMZ subnets, ssh(22/tcp) access from bastion host and self(Allow all connect from the same group) ingress access.
+  * ``"aws_security_group" "bastion"`` - allowed for the ssh(22/tcp) port from all nodes. (for the security, CIDR will be changing.)
+
+__vpc-subnet.tf__
+* four ``aws_subnet`` resources are defined.
+  * "aws_subnet" "threetier_web_subnet" - Subnets with 10.10.0.0/24 and 10.10.1.0/24 CIDR are created for each az.
+  * "aws_subnet" "threetier_dmz_subnet" - Subnets with 10.10.2.0/24 and 10.10.3.0/24 CIDR are created for each az.
+  * "aws_subnet" "threetier_was_subnet" - Subnets with 10.10.10.0/24 and 10.10.11.0/24 CIDR are created for each az. (Currently, not deployed as instances, just created as a subnet)
+  * "aws_subnet" "threetier_db_subnet" - Subnets with 10.10.12.0/24 and 10.10.13.0/24 CIDR are created for each az. (Currently, not deployed as instances, just created as a subnet)
 
 
