@@ -78,7 +78,6 @@ resource "aws_instance" "web" {
   ami = "ami-0c5a717974f63b04c"
   vpc_security_group_ids = [ "${aws_security_group.threetier_default.id}"
                            ]
-  associate_public_ip_address = true
   subnet_id = "${element(aws_subnet.threetier_web_subnet.*.id, count.index)}"
   provisioner "file" {
     source = "script.sh"
