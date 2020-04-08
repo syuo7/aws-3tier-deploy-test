@@ -15,7 +15,7 @@ terraform {
   }
 }
 
-# Create the EIP
+# Create the NAT EIP
 resource "aws_eip" "nat_eip" {
   vpc = true
   depends_on = ["aws_internet_gateway.gw"]
@@ -27,7 +27,6 @@ resource "aws_elb" "elb" {
   
   subnets = "${aws_subnet.threetier_dmz_subnet.*.id}"
   security_groups = ["${aws_security_group.elb.id}",
-                   #  "${aws_security_group.threetier_default.id}"
                     ]
   instances = "${aws_instance.web.*.id}"
 
@@ -60,7 +59,8 @@ resource "aws_instance" "bastion" {
     Name = "Bastion HOST for access to private ec2"
   }
 }
-  
+
+# Create the two web(nginx) instance 
 resource "aws_instance" "web" {
   count = "${length(var.availability_zone)}"
   connection {
@@ -94,4 +94,5 @@ resource "aws_instance" "web" {
   tags = {
     Name = "nginx-${count.index+1}"
   }
+  depends_on = ["aws_nat_gateway.threetier"]
 }
