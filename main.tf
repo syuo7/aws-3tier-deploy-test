@@ -21,30 +21,57 @@ resource "aws_eip" "nat_eip" {
   depends_on = ["aws_internet_gateway.gw"]
 }
 
-# Create for the elb
-resource "aws_elb" "elb" {
-  name = "elb"
-  
+# Create the ALB for nginx instance load balancing.
+resource "aws_alb" "alb" {
+  name = "nginx-alb"
+  internal = false
   subnets = "${aws_subnet.threetier_dmz_subnet.*.id}"
   security_groups = ["${aws_security_group.elb.id}",
                      "${aws_security_group.threetier_default.id}"
                     ]
-  instances = "${aws_instance.web.*.id}"
-
-  listener {
-    instance_port = 80
-    instance_protocol = "http"
-    lb_port = 80
-    lb_protocol = "http"
+  tags = {
+    Name = "Nginx ALB"
   }
+  lifecycle { create_before_destroy = true }
+}
 
+# Set the ELB listener.
+resource "aws_alb_listener" "nginx" {
+  load_balancer_arn = "${aws_alb.alb.arn}"
+  port = "80"
+  protocol = "HTTP"
+  
+  default_action { 
+    type = "forward"
+    target_group_arn = "${aws_alb_target_group.nginx.arn}"
+  }
+}
+
+# Set the alb target group.
+resource "aws_alb_target_group" "nginx" {
+  name = "nginx-target-group"
+  port = 80
+  protocol = "HTTP"
+  vpc_id = "${aws_vpc.threetier.id}"
+  
   health_check {
-    healthy_threshold = 2
-    unhealthy_threshold = 2
-    timeout = 3
-    target = "HTTP:80/"
     interval = 30
+    path = "/"
+    healthy_threshold = 3
+    unhealthy_threshold = 3
   }
+ 
+  tags = {
+    Name = "nginx target group"
+  }
+}
+
+# Set the alb_target_group_attachment
+resource "aws_alb_target_group_attachment" "nginx" {
+  count = length(aws_instance.web)
+  target_group_arn = "${aws_alb_target_group.nginx.arn}"
+  target_id = aws_instance.web[count.index].id
+  port = 80
 }
 
 # Set the bastion host key pair
