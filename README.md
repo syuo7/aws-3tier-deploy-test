@@ -6,10 +6,13 @@ Aws deploy guide for 3tier(web, was, db) architecture managed by terraform.
 
 # Description for each tf file
 __main.tf__
-* ``remote``, ``aws_eip``, ``aws_elb``, ``aws_key_pair`` and ``aws_instance`` resources are defined.
+* ``remote``, ``aws_eip``, ``aws_alb``, ``aws_alb_listener``, ``aws_alb_target_group``, ``aws_alb_target_group_attachment``, ``aws_key_pair`` and ``aws_instance`` resources are defined.
   * ``remote`` - Management for the tfstate on the terraform cloud. ( But current build env is local, not remote terraform build on cloud. )
   * ``aws_eip`` - Created the EIP for the Nat gateway.
-  * ``aws_elb`` - Load balancing for the front of the two web instances(Nginx).
+  * ``aws_alb`` - Load balancing for the front of the two web instances(Nginx).
+  * ``aws_alb_listener`` - Listening rule for alb (external internet -> alb). 
+  * ``aws_alb_target_group``- Rule for target group.
+  * ``aws_alb_target_group_attachment`` - Attachment the before made target group to instances. (alb -> internal instances)
   * ``aws_key_pair`` - Public key info for ssh access to the bastion host from admin.
   * ``aws_instance`` - One Bastion host instance and two web instances. (Bastion host on the DMZ subnet, two web instances on the web subnets.)
 
